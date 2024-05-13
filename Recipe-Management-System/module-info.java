@@ -1,0 +1,3 @@
+module Recipe.Management.System {
+
+}

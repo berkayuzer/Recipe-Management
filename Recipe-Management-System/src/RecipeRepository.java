@@ -60,6 +60,7 @@ public class RecipeRepository {
             for (String tag : element.tags) {
                 sb.append("- ").append(tag).append("\n");
             }
+            sb.append("Average Rating: ").append(element.avgRating).append("\n");
             System.out.println(sb);
 
     }

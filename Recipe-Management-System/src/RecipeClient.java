@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class RecipeClient {
     static Scanner scanner = new Scanner(System.in);
     static RecipeRepository repository = new RecipeRepository("RecipeDataset.txt");
+    static RecipeRatingManager recipeRatingManager = RecipeRatingManager.getInstance();
 
     public static void main(String[] args) { displayMenu(); }
 
@@ -44,6 +45,7 @@ public class RecipeClient {
     }
 
     static void createRecipe() {
+        float avgRating = 0;
         RecipeFactory factory = new ConcreteRecipeFactory();
         System.out.println("Create Recipe Menu");
         System.out.println("Enter the recipe name:");
@@ -125,7 +127,8 @@ public class RecipeClient {
         System.out.println("Do you want to save this recipe: (Yes or No)");
         String save = scanner.next();
         if (Objects.equals(save, "Yes")) {
-            repository.saveRecipe(factory.createRecipe(recipeName, ingredients, cookingInstructions, servingSize, selectedCategories, selectedTags));
+            repository.saveRecipe(factory.createRecipe(recipeName, ingredients, cookingInstructions, servingSize, selectedCategories, selectedTags, avgRating));
+            displayMenu();
         }
 
     }
@@ -176,6 +179,9 @@ public class RecipeClient {
                     Command modifyIngredientsCommand = new ModifyIngredientsCommand(recipeConcrete, ingredients);
                     recipeModificationInvoker.executeCommand(modifyIngredientsCommand);
                     System.out.println(ingredients);
+                    repository.saveRecipe(recipeConcrete);
+                    repository.getAllRecipes().get(recipeID-1).setIngredients(ingredients);
+
                 }
 
                 case 2 -> {
@@ -234,8 +240,43 @@ public class RecipeClient {
     }
 
     static void rateRecipe() {
-        RecipeRatingManager recipeRatingManager = RecipeRatingManager.getInstance();
+        List<RecipeConcrete> recipes = repository.getAllRecipes();
 
+        // Display available recipes for rating
+        System.out.println("Select a recipe to rate:");
+        for (int i = 0; i < recipes.size(); i++) {
+            System.out.println((i + 1) + ". " + recipes.get(i).getName());
+            System.out.println((i + 1) + ". " + recipes.get(i).getAvgRating());
+            repository.write();
+        }
+        int recipeIndex = scanner.nextInt();
+
+        // Select the recipe for rating
+        RecipeConcrete selectedRecipe = recipes.get(recipeIndex - 1);
+
+        // Prompt user for rating with validation
+        float rating = 0;
+        boolean validRating = false;
+        while (!validRating) {
+            System.out.println("Enter your rating for '" + selectedRecipe.getName() + "' (0-5):");
+            try {
+                rating = scanner.nextFloat();
+                if (rating < 0 || rating > 5) {
+                    System.out.println("Invalid rating. Please enter a rating between 0 and 5.");
+                } else {
+                    validRating = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a numeric value.");
+                scanner.nextLine(); // Clear input buffer
+            }
+        }
+        // Rate the recipe using RecipeRatingManager
+        recipeRatingManager.rateRecipe(selectedRecipe, rating);
+
+        // Display confirmation message
+        System.out.println("Rating saved successfully for '" + selectedRecipe.getName() + "'.");
+        displayMenu();
     }
 
     static void searchRecipe(){

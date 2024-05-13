@@ -38,6 +38,10 @@ public class RecipeRepository {
         recipes.add(recipe);
         saveRecipes(); // Save recipes to file after adding a new recipe
     }
+    public void saveRecipe(RecipeConcrete recipe, int recipeID){
+        recipes.set(recipeID,recipe);
+        saveRecipes();
+    }
 
     public List<RecipeConcrete> getAllRecipes() {
         return recipes;

@@ -179,8 +179,7 @@ public class RecipeClient {
                     Command modifyIngredientsCommand = new ModifyIngredientsCommand(recipeConcrete, ingredients);
                     recipeModificationInvoker.executeCommand(modifyIngredientsCommand);
                     System.out.println(ingredients);
-                    repository.saveRecipe(recipeConcrete);
-                    repository.getAllRecipes().get(recipeID-1).setIngredients(ingredients);
+                    repository.saveRecipe(recipeConcrete,recipeID-1);
 
                 }
 
@@ -190,6 +189,7 @@ public class RecipeClient {
                     String newCookingInstructions = scanner.nextLine();
                     Command modifyInstructionsCommand = new ModifyInstructionsCommand(recipeConcrete, newCookingInstructions);
                     recipeModificationInvoker.executeCommand(modifyInstructionsCommand);
+                    repository.saveRecipe(recipeConcrete,recipeID-1);
                 }
 
                 case 3 -> {
@@ -205,6 +205,7 @@ public class RecipeClient {
 
                     Command modifyCategoriesCommand = new ModifyCategoriesCommand(recipeConcrete, categories);
                     recipeModificationInvoker.executeCommand(modifyCategoriesCommand);
+                    repository.saveRecipe(recipeConcrete,recipeID-1);
                 }
 
                 case 4 -> {
@@ -219,11 +220,13 @@ public class RecipeClient {
                     } while (!tag.equalsIgnoreCase("done") && tags.size() < 3);
                     Command modifyTagsCommand = new ModifyTagsCommand(recipeConcrete, tags);
                     recipeModificationInvoker.executeCommand(modifyTagsCommand);
+                    repository.saveRecipe(recipeConcrete,recipeID-1);
                 }
 
                 case 5 -> {
                     recipeModificationInvoker.undoCommand();
                     System.out.println("Undo operation performed.");
+                    repository.saveRecipe(recipeConcrete,recipeID-1);
 
                 }
 
@@ -231,6 +234,7 @@ public class RecipeClient {
                     displayRecipes(recipes);
                     System.out.println("Exiting.");
                     displayMenu();
+
                 }
                 default -> System.out.println("Invalid choice. Please enter a valid option.");
             }

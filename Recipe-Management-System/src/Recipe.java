@@ -1,8 +1,9 @@
 package src;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Recipe {
+public abstract class Recipe implements Serializable {
 
     public String getName() {
         return null;

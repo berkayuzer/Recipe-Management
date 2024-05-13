@@ -7,13 +7,12 @@ public class RecipeConcrete extends Recipe {
     String name, cookingInstructions;
     int servingSize;
     float avgRating;
-    public RecipeConcrete(String name, List<String> ingredients, String cookingInstructions, int servingSize, List<String> categories, List<String> tags, float avgRating) {
+    public RecipeConcrete(String name, List<String> ingredients, String cookingInstructions, int servingSize, List<String> categories, List<String> tags) {
         this.name = name;
         this.ingredients = ingredients;
         this.cookingInstructions = cookingInstructions;
         this.servingSize = servingSize;
         this.categories = categories;
-        this.avgRating = avgRating;
         this.tags = tags;
     }
     @Override
